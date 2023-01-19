@@ -1,9 +1,9 @@
 import { selector } from "recoil";
 
-//API
+//api
 import { requester } from "../../api/requester";
 
-//Recoil: atoms
+//recoil: atoms
 import { atomPokemon } from "../atoms/atoms";
 
 export const selectorGetPokemon = selector({
@@ -11,10 +11,12 @@ export const selectorGetPokemon = selector({
   get: async ({get}) => {
     const pokemon = get(atomPokemon)
 
+    //se existir pokemon, executar
     if(pokemon) {
+      //importando a API
       const {data} = await requester({
         baseURL: "https://pokeapi.co/api/v2",
-      }).get(`/pokemon/${pokemon.toLowerCase().trim()}`)
+      }).get(`/pokemon/${pokemon.toLowerCase().trim()}`) //letras minúsculas e remover espaços em branco
 
       return data
     }
