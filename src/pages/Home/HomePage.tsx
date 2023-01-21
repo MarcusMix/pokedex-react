@@ -2,6 +2,7 @@ import { useState } from "react"
 
 //recoil states, valueLoadable
 import { useRecoilState, useRecoilValueLoadable } from "recoil"
+import Card from "../../components/Card/card"
 
 //recoil: atoms
 import { atomPokemon } from "../../store/atoms/atoms"
@@ -44,18 +45,28 @@ const HomePage = () => {
         {/* renderiza o pokemon, se tiver valor e não for undefined */}
         {getLoadablePokemon.state === "hasValue" &&
         getLoadablePokemon?.contents !== undefined && (
-          <div>
-            <img
-            width="150px"
-            //  'url' da imagem do pokemon
-            src={getLoadablePokemon?.contents?.sprites?.front_default}
 
-            //  alt com o nome
-            alt={`pokemom: ${getLoadablePokemon?.contents?.name}`}/>
 
-            {/* nome do pokemon */}
-            <h3>{getLoadablePokemon?.contents?.name}</h3>
-          </div>
+        <Card
+          id={getLoadablePokemon?.contents?.id}
+          image={getLoadablePokemon?.contents?.sprites?.other?.dream_world?.front_default}
+          name={getLoadablePokemon?.contents?.name}
+          preview={getLoadablePokemon?.contents?.sprites?.version?.["generaion-v"]?.["black-white"].animated?.front_default}
+          type={getLoadablePokemon?.contents?.types[0]?.type?.name}
+        />
+
+          // <div>
+          //   <img
+          //   width="150px"
+          //   //  'url' da imagem do pokemon
+          //   src={getLoadablePokemon?.contents?.sprites?.front_default}
+
+          //   //  alt com o nome
+          //   alt={`pokemom: ${getLoadablePokemon?.contents?.name}`}/>
+
+          //   {/* nome do pokemon */}
+          //   <h3>{getLoadablePokemon?.contents?.name}</h3>
+          // </div>
         )}
       </div>
     </>
