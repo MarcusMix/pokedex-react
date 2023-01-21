@@ -11,22 +11,18 @@ export const Container = styled.div`
   box-sizing: border-box;
   max-width: 1320px;
   padding: 0px;
-  @media (max-width: ${({ theme }: { theme: DefaultTheme }) =>
-      theme?.breakpoints?.xl}) {
+  @media (max-width: ${({ theme }: { theme: DefaultTheme }) => theme?.breakpoints?.xl}) {
     max-width: 1140px;
     padding: 0px 25px;
   }
-  @media (max-width: ${({ theme }: { theme: DefaultTheme }) =>
-      theme?.breakpoints?.lg}) {
+  @media (max-width: ${({ theme }: { theme: DefaultTheme }) => theme?.breakpoints?.lg}) {
     max-width: 960px;
   }
-  @media (max-width: ${({ theme }: { theme: DefaultTheme }) =>
-      theme?.breakpoints?.md}) {
+  @media (max-width: ${({ theme }: { theme: DefaultTheme }) => theme?.breakpoints?.md}) {
     max-width: 720px;
     padding: 0px 15px;
   }
-  @media (max-width: ${({ theme }: { theme: DefaultTheme }) => 
-      theme?.breakpoints?.sm}) {
+  @media (max-width: ${({ theme }: { theme: DefaultTheme }) => theme?.breakpoints?.sm}) {
     max-width: 100%;
   }
 `
