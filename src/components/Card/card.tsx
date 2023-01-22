@@ -3,7 +3,7 @@ import { FlexBox } from "../components"
 import * as CardStyles from './card.styles'
 
 interface ICardProps {
-  id: string,
+  id: number,
   name: string,
   image: string,
   preview?: string,
