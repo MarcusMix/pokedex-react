@@ -8,12 +8,14 @@ import { IPokemon, IPokemonFetch } from "../../interface/interface";
 
 //recoil: atoms
 import { atomPokemonFetch, atomPokemonOffSet, atomPokemonSearch } from "../atoms/atoms";
+import { atomHashPokemonsFetch, atomHashPokemonsList } from "../hashs/hash";
 
 
 //fetch dos 15 pokemons offset
 export const selectorFetchPokemons = selector({
   key: 'selectorFetchPokemons',
   get: async ({get}) => {
+    get(atomHashPokemonsFetch)
     const offSet = get(atomPokemonOffSet)
 
       const {data} = await requester({
@@ -27,6 +29,7 @@ export const selectorFetchPokemons = selector({
 export const selectorGetPokemons = selector({
   key: 'selectorGetPokemons',
   get: async ({get}) => {
+    get(atomHashPokemonsList)
     const pokemonFetch = get(atomPokemonFetch)
 
     //se existir pokemon, executar
