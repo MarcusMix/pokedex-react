@@ -3,6 +3,7 @@ import { FlexBox } from "../Flexbox/flexbox";
 
 export const HeaderContainer = styled(FlexBox)`
   margin: 0px;
+  margin-top: ${(props) => props.theme.spacing.xs};
   margin-bottom: ${(props) => props.theme.spacing.sm};
   h2 {
     margin: 0px;
