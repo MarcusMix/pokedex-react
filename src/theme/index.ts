@@ -23,7 +23,7 @@ export const dark = () => ({
     },
     background: "#0f172a",
     dark: {
-      pure: "#1e293b",
+      pure: "#012326",
       1: "#334155",
       2: "#475569",
       3: "#64748b",
@@ -40,7 +40,7 @@ export const dark = () => ({
       2: "#475569",
       3: "#64748b",
     },
-    primary: "#EA047E",
+    primary: "#9C6CF5",
     secondary: "#FEC260",
     feedback: {
       error: "#cc0000",

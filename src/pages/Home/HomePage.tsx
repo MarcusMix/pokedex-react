@@ -1,168 +1,160 @@
-import { useEffect, useState, useMemo, useCallback } from "react"
+import { useEffect, useMemo, useCallback } from "react";
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from "recoil";
 
-//recoil states, valueLoadable
-import {  useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValueLoadable, useSetRecoilState } from "recoil"
-import Card from "../../components/Card/card"
-import { Container, FlexBox } from "../../components/components"
+// components
+import {
+  Container,
+  FlexBox,
+  Header,
+  InitialPokemons,
+  PokemonsSection,
+  SinglePokemon,
+} from "../../components/components";
+import PokemonSearch from "../../components/PokemonSearch/pokemonSearch"
 
-//recoil: atoms
-import { atomPokemonFetch, atomPokemonList, atomPokemonOffSet, atomPokemonSearch } from "../../store/atoms/atoms"
+// recoil: atoms
+import {
+  atomPokemon,
+  atomPokemonFetch,
+  atomPokemonList,
+} from "../../store/atoms/atoms";
 
-//recoil: selectors
-import { selectorFetchPokemons, selectorGetPokemon, selectorGetPokemons } from "../../store/selectors/selectors"
+// recoil: hashs
+import { atomHashPokemonsFetch, atomHashPokemonsList } from "../../store/hashs/hash";
 
-//recoil: hash
-import {atomHashPokemonsFetch, atomHashPokemonsList} from "../../store/hashs/hash"
+// recoil: selectors
+import {
+  selectorFetchPokemons,
+  selectorGetPokemon,
+  selectorGetPokemons,
+} from "../../store/selectors/selectors";
 
+// ::
 const HomePage = () => {
+  // recoil: states
+  const setFetchPokemons = useSetRecoilState(atomPokemonFetch);
+  const [pokemon, setPokemon] = useRecoilState(atomPokemon);
+  const [pokemonList, setPokemonList] = useRecoilState(atomPokemonList);
+  const [hashFetchMorePokemons, setHashFetchMorePokemons] = useRecoilState(
+    atomHashPokemonsFetch
+  );
+  const [hashPokemonsList, setHashPokemonsList] =
+    useRecoilState(atomHashPokemonsList);
 
-  // local: states
-  const [searchPokemon, setSearchPokemon] = useState("")
+  // recoil: loadable
+  const getLodablePokemons = useRecoilValueLoadable(selectorGetPokemons);
+  const getLoadablePokemon = useRecoilValueLoadable(selectorGetPokemon);
+  const fetchLoadablePokemon = useRecoilValueLoadable(selectorFetchPokemons);
 
-  // recoil states
-  const setPokemon = useSetRecoilState(atomPokemonSearch)
-  const setFetchPokemons  = useSetRecoilState(atomPokemonFetch)
-  const [pokemonsOffset, setPokemonsOffset] = useRecoilState(atomPokemonOffSet)
-  const [pokemonList, setPokemonList] = useRecoilState(atomPokemonList)
-
-  //vai ser usado caso der erro
-  const [hashFetchMorePokemons, setHashFetchMorePokemons] = useRecoilState(atomHashPokemonsFetch)
-  const [hashPokemonsList, setHashPokemonsList] = useRecoilState(atomHashPokemonsList)
-
-  // caso der erro na chamada, ele se ativará
-  // const retryFetchMorePokemons = useRecoilRefresher_UNSTABLE(selectorFetchPokemons)
-
-  // recoil loadable
-  const getLoadablePokemon =  useRecoilValueLoadable(selectorGetPokemon)
-
-  //fetch dos 15 pokemons
-  const fetchLoadablePokemon = useRecoilValueLoadable(selectorFetchPokemons)
-
-  const getLoadablePokemons = useRecoilValueLoadable(selectorGetPokemons)
-
-  // memo states
-  // quando estiver carregando, deixa o botão disable
-  const disableFetchMorePokemons = useMemo(() => {
-    if(
-    fetchLoadablePokemon.state === 'hasError' ||
-    fetchLoadablePokemon.state === 'loading' ||
-    getLoadablePokemons.state === 'hasError' ||
-    getLoadablePokemons.state === 'loading'
+  // memo: states
+  const disabledFetchMorePokemons = useMemo(() => {
+    if (
+      fetchLoadablePokemon.state === "hasError" ||
+      fetchLoadablePokemon.state === "loading" ||
+      getLodablePokemons.state === "hasError" ||
+      getLodablePokemons.state === "loading"
     ) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }, [fetchLoadablePokemon.state, getLoadablePokemons.state])
+  }, [fetchLoadablePokemon.state, getLodablePokemons.state]);
 
   const hasFetchPokemonError = useMemo(() => {
-    if(
-      fetchLoadablePokemon.state === 'hasError' ||
-      getLoadablePokemons.state === 'hasError'
-      ) {
-        return true
-      } else {
-        return false
-      }
-  }, [fetchLoadablePokemon.state, getLoadablePokemons.state])
-
-
-  // lidar com a busca do pokemon
-  const handleSearchPokemonClick = () => {
-    setPokemon(searchPokemon)
-  }
-
-  // lidar com a busca dos 15 pokemons
-  const handleLoadingPokemons = () => {
-    setPokemonsOffset(pokemonsOffset + 15)
-  }
-
-  // tratando o erro de pegar os 15 pokemons
-  const retryFetchMorePokemons = useCallback(() => {
-    if(fetchLoadablePokemon.state === 'hasError') {
-        setHashFetchMorePokemons(hashFetchMorePokemons + 1)
+    if (
+      fetchLoadablePokemon.state === "hasError" ||
+      getLodablePokemons.state === "hasError"
+    ) {
+      return true;
+    } else {
+      return false;
     }
-    if (getLoadablePokemons.state === 'hasError') {
-        setHashPokemonsList(hashPokemonsList + 1)
+  }, [fetchLoadablePokemon.state, getLodablePokemons.state]);
+
+  const pokemonsCounter = useMemo(() => {
+    return fetchLoadablePokemon.contents.count;
+  }, [fetchLoadablePokemon.contents.count]);
+
+  // callbacks
+  const retryFethMorePokemon = useCallback(() => {
+    if (fetchLoadablePokemon.state === "hasError") {
+      setHashFetchMorePokemons(hashFetchMorePokemons + 1);
     }
-  }, [getLoadablePokemons.state, getLoadablePokemons.contents])
+    if (getLodablePokemons.state === "hasError") {
+      setHashPokemonsList(hashPokemonsList + 1);
+    }
+  }, [fetchLoadablePokemon.state, getLodablePokemons.state]);
+
+  // effects
+  useEffect(() => {
+    if (
+      fetchLoadablePokemon.state === "hasValue" &&
+      fetchLoadablePokemon.contents !== undefined
+    ) {
+      setFetchPokemons(fetchLoadablePokemon.contents.results);
+    }
+  }, [fetchLoadablePokemon.state, fetchLoadablePokemon.contents]);
 
   useEffect(() => {
-    if(getLoadablePokemons.state === 'hasValue' && getLoadablePokemons.contents !== undefined) {
-      if(pokemonList.length > 0) { // se pokemonList existe
-        setPokemonList(pokemonList.concat(getLoadablePokemons.contents)) // concatena os valores dos pokemons
+    if (
+      getLodablePokemons.state === "hasValue" &&
+      getLodablePokemons.contents !== undefined
+    ) {
+      if (pokemonList.length > 0) {
+        const filteredList = getLodablePokemons.contents.filter(
+          (pokemon) => !pokemonList.find((item) => item.name === pokemon.name)
+        );
+
+        setPokemonList(pokemonList.concat(filteredList));
       } else {
-        setPokemonList(getLoadablePokemons.contents) // se não existir, só passa o valor direto
+        setPokemonList(getLodablePokemons.contents);
       }
     }
-    console.log(getLoadablePokemons.contents)
-  },[getLoadablePokemons.state, getLoadablePokemons.contents])
+  }, [getLodablePokemons.state, getLodablePokemons.contents]);
 
-  //pegando 15 pokemons
   useEffect(() => {
-    if(fetchLoadablePokemon.state === 'hasValue' && fetchLoadablePokemon.contents !== undefined) {
-      setFetchPokemons(fetchLoadablePokemon.contents.results)
+    if (
+      getLoadablePokemon?.state === "hasValue" &&
+      getLoadablePokemon?.contents !== undefined
+    ) {
+      setPokemon(getLoadablePokemon.contents);
     }
-  }, [fetchLoadablePokemon.state ,fetchLoadablePokemon.contents])
+  });
 
   return (
     <Container>
-      <FlexBox align='flex-start' justify='center' direction='column' gap='xxs'>
-
-      {/* procurando o pokemon */}
-      <input type="text" onChange={(event) => setSearchPokemon(event.target.value)} />
-
-      {/* faz a chamada pra procurar */}
-      <button onClick={handleSearchPokemonClick}>Procurar</button>
-
-      {/* renderiza uma mensagem de loading*/}
-      {getLoadablePokemon.state === "loading" && <div>Loading...</div>}
-
-      {/* renderiza o pokemon, se tiver valor e não for undefined */}
-      {getLoadablePokemon.state === "hasValue" &&
-        getLoadablePokemon?.contents !== undefined && (
-
-        <Card
-          id={getLoadablePokemon.contents.id}
-          image={getLoadablePokemon?.contents?.sprites?.other?.dream_world?.front_default || getLoadablePokemon?.contents?.sprites.other?.["official-artwork"]?.front_default || ''}
-          name={getLoadablePokemon?.contents?.name}
-          preview={getLoadablePokemon?.contents?.sprites?.versions?.["generation-v"]?.["black-white"]?.animated?.front_default}
-          type={getLoadablePokemon?.contents?.types[0]?.type?.name}
+      <FlexBox
+        align="flex-start"
+        justify="flex-start"
+        direction="column"
+        gap="xxxs"
+        >
+        <Header/>
+        <InitialPokemons />
+        <PokemonSearch />
+        <SinglePokemon
+          pokemon={pokemon}
+          error={getLoadablePokemon.state === "hasError"}
+          loading={getLoadablePokemon.state === "loading"}
         />
-      )}
-
       </FlexBox>
+      <PokemonsSection
+        pokemons={pokemonList}
+        disabledFetch={disabledFetchMorePokemons}
+        hasErrors={hasFetchPokemonError}
+        loading={
+          getLodablePokemons.state === "loading" ||
+          fetchLoadablePokemon.state === "loading"
+        }
+        pokemonCount={pokemonsCounter}
+        retryFetch={retryFethMorePokemon}
+      />
+    </Container>
+  );
+};
 
-      <FlexBox align='flex-start' justify='center' direction='row' gap='xxs'>
-          {pokemonList?.map((pokemon) => (
-            <Card
-            id={pokemon.id}
-            image={pokemon.sprites?.other?.dream_world?.front_default || pokemon.sprites.other?.["official-artwork"]?.front_default || ''}
-            name={pokemon.name}
-            preview={pokemon.sprites?.versions?.["generation-v"]?.["black-white"]?.animated?.front_default}
-            type={pokemon.types[0]?.type?.name}
-          />
-          ))}
-      </FlexBox>
-      <button
-        // botão que puxa mais 15 pokemons
-        disabled={disableFetchMorePokemons} // use memo disable
-        onClick={handleLoadingPokemons}
-      >
-        Carregar mais
-      </button>
-
-
-      {hasFetchPokemonError && (
-        // caso der erro, esse botão aparecerá para recarregar o conteúdo
-        <button
-        onClick={() => retryFetchMorePokemons()}
-      >
-        Tentar Novamente
-      </button>
-      )}
-  </Container>
-  )
-}
-
-export default HomePage
+export default HomePage;

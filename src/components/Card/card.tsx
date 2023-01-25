@@ -1,14 +1,7 @@
 import { FC } from "react"
 import { FlexBox } from "../components"
 import * as CardStyles from './card.styles'
-
-interface ICardProps {
-  id: number,
-  name: string,
-  image: string,
-  preview?: string,
-  type: TPokemonType,
-}
+import type { ICardProps } from "./card.types"
 
 const Card: FC<ICardProps> = ({id, image, name, preview, type}) => {
     return (
@@ -22,14 +15,14 @@ const Card: FC<ICardProps> = ({id, image, name, preview, type}) => {
         <CardStyles.PokemonText type={type}>#{id}</CardStyles.PokemonText>
       </FlexBox>
 
-      <CardStyles.PokemonSpot type={type} align="center" justify="center">
+      <CardStyles.PokemonSpot type={type} align="center" justify="center" direction="column">
         <CardStyles.PokemonSprite src={image} />
       </CardStyles.PokemonSpot>
 
-      <FlexBox align="center" justify="space-between" direction="row">
-        <CardStyles.PokemonText>{name}</CardStyles.PokemonText>
+      <CardStyles.PokemonPreviewSection align="center" justify="space-between" direction="row">
+        <CardStyles.PokemonText type={type}>{name}</CardStyles.PokemonText>
         {preview && <img src={preview} alt=""/>}
-      </FlexBox>
+      </CardStyles.PokemonPreviewSection>
     </CardStyles.Container>
   )
 }

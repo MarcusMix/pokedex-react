@@ -8,8 +8,8 @@ export const ResetCss = createGlobalStyle`
     background-color: ${({ theme }) => theme.colors.background};
     padding: 0;
     margin-bottom: ${(props) => props.theme.spacing.sm};
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    margin-top: 5x;
+    font-family: 'Poppins';
   }
   a {
     color: inherit;
@@ -17,7 +17,7 @@ export const ResetCss = createGlobalStyle`
   }
   * {
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins';
   }
   ::-webkit-scrollbar-track {
     /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1); */
