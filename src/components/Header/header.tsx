@@ -25,7 +25,6 @@ const Header = () => {
         <Styles.HeaderItem>
           <MdHome size="20" />
         </Styles.HeaderItem>
-          <h1>Pokedex React</h1>
         <div>
           <FlexBox align="center" justify="flex-end" direction="row" gap="xxxs">
             <a
